@@ -76,6 +76,8 @@ module Fluent
     # config_param :field_record,  :string, defualt: nil
     # config_param :optional_data_field, :string, default: nil
 
+    config_param :table_id_utc, :bool, default: true
+
     config_param :time_format, :string, default: nil
     config_param :localtime, :bool, default: nil
     config_param :utc, :bool, default: nil
@@ -248,7 +250,11 @@ module Fluent
     end
 
     def generate_table_id(table_id_format, current_time)
-      current_time.strftime(table_id_format)
+      if @table_id_utc
+        current_time.utc.strftime(table_id_format)
+      else
+        current_time.strftime(table_id_format)
+      end
     end
 
     def create_table(table_id)
